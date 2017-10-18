@@ -11,6 +11,8 @@ var app=express();
 
 const port=process.env.PORT || 3000;
 
+console.log(process.env.PORT);
+
 //bpdy-parser is a middleware for express
 //bodyParser.json() returns a function which express can use
 app.use(bodyParser.json());
