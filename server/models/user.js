@@ -55,7 +55,27 @@ UserSchema.methods.generateAuthToken = function (){
 	});
 };
 
+//every method to statics(here findByToken) is a model method
+UserSchema.statics.findByToken = function (token){
+	var User=this;
+	var decoded;
 
+	try{
+		decoded= jwt.verify(token, '1234');
+	}catch(e){
+		// return new Promise((resolve,reject)=>{
+		// 	reject();
+		// });
+		//This above code can be written as following
+		return Promise.reject();
+	}
+
+	return User.findOne({
+		'_id': decoded._id,
+		'tokens.token': token,
+		'tokens.access': 'auth'
+	});
+};
 
 
 var User=mongoose.model('User',UserSchema);
