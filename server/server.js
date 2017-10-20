@@ -61,9 +61,7 @@ app.delete('/todos/:id',(req,res)=>{
 	});
 });
 
-app.listen(port, () => {
-	console.log('Started on port: '+port);
-});
+
 
 app.get('/todos/:id',(req,res)=>{
 	var id=req.params.id;
@@ -115,6 +113,27 @@ app.patch('/todos/:id',(req,res)=>{
 	}).catch((e)=>{
 		return res.status(400).send();
 	});
+});
+
+app.post('/users', (req,res)=>{
+	var body = _.pick(req.body, ['email', 'password']);
+	var user = new User(body);
+
+	user.save().then(()=>{
+		//console.log(user);
+		return user.generateAuthToken();
+	}).then((token)=>{
+		//console.log('lp');
+		// Header with 'x-' means we are creating a custom header
+		res.header('x-auth', token).send(user);
+	}).catch((e)=>{
+		//console.log('lk');
+		res.status(400).send(e);
+	})
+});
+
+app.listen(port, () => {
+	console.log('Started on port: '+port);
 });
 
 module.exports = {
